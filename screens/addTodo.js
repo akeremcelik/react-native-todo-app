@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, View, Text } from 'react-native';
 import { Formik } from 'formik';
 import Button from '../components/button';
 import * as yup from 'yup';
+import { useTheme } from '@react-navigation/native';
 
 let schema = yup.object().shape({
     title: yup.string().required().min(4),
@@ -11,6 +12,7 @@ let schema = yup.object().shape({
 
 const addTodo = ({ route }) => {
     const { addPressHandler } = route.params;
+    const { colors } = useTheme();
 
     return (
         <View style={styles.container}>
@@ -23,6 +25,8 @@ const addTodo = ({ route }) => {
                 <View>
                     <TextInput style={styles.input}
                     placeholder='Title'
+                    placeholderTextColor={colors.text}
+                    color={colors.text}
                     onChangeText={handleChange('title')}
                     onBlur={handleBlur('title')}
                     value={values.title}
@@ -33,6 +37,8 @@ const addTodo = ({ route }) => {
 
                     <TextInput style={[styles.input, {height: 100}]}
                     placeholder='Description'
+                    placeholderTextColor={colors.text}
+                    color={colors.text}
                     multiline
                     onChangeText={handleChange('description')}
                     onBlur={handleBlur('description')}

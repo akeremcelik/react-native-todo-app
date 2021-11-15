@@ -1,10 +1,13 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 
 const todoItem = ({item, pressHandler}) => {
+    const { colors } = useTheme();
+
     return (
         <TouchableOpacity onPress={pressHandler}>
-            <Text style={[styles.item, item.isDone && {backgroundColor: "#00ff00"}]}>{item.title}</Text>
+            <Text style={[styles.item, {color: colors.text}, item.isDone && {backgroundColor: "#00af00"}]}>{item.title}</Text>
         </TouchableOpacity>
     );
 }

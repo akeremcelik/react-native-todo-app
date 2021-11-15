@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FlatList, View, StyleSheet, Text } from 'react-native';
 import TodoItem from '../components/todoItem';
 import Button from '../components/button';
+import localStorage from "../helpers/localStorage";
+import { useTheme } from "@react-navigation/native";
 
 const todoList = ({navigation}) => {
-    const [todoState, setTodoState] = useState([
-        {key: "1", title: "Todo 1", description: "Description 1", isDone:true},
-        {key: "2", title: "Todo 2", description: "Description 2", isDone:false},
-        {key: "3", title: "Todo 3", description: "Description 3", isDone:false},
-    ]);
+    const [todoState, setTodoState] = useState([]);
+    const { colors } = useTheme();
 
     const markPressHandler = (key) => {
         let updatedState = todoState.map((todo) => (
@@ -32,16 +31,27 @@ const todoList = ({navigation}) => {
         navigation.navigate('Todo List');
     }
 
+    useEffect(()=>{
+        localStorage.getData('todo').then(
+            (data)=>setTodoState(data)
+        );
+    }, []);
+
+    useEffect(()=>{
+        localStorage.storeData(todoState, 'todo');
+    }, [todoState]);
+
     return (
         <View style={styles.container}>
             <Button text="+" backgroundColor="#1479e8" textColor="#fff" width="20%" fontSize="20" pressHandler={() => navigation.navigate('Add Todo', {addPressHandler})} />
             {todoState.length > 0 ?
-                <FlatList 
-                    data={todoState}
+                <FlatList
+                    data={[...todoState].reverse()}
                     renderItem={({item}) => <TodoItem item={item} pressHandler={() => navigation.navigate('Todo Details', {item, markPressHandler, deletePressHandler})} />}
+                    //keyExtractor={(item, index) => `${item?.key}`}
                 />
             :
-                <Text>Currently there is no saved todo</Text>
+                <Text style={{color: colors.text}}>Currently there is no saved todo</Text>
             }
         </View>
     );
